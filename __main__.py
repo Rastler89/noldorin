@@ -1,8 +1,9 @@
-import tkinter
 from tkinter import *
 from tkinter import messagebox
-import sqlite3
 from tkinter.ttk import Notebook
+
+from nucleox.DB import Nucleox
+from nucleox.Navbar import Navbar
 
 
 class Noldorin:
@@ -12,6 +13,8 @@ class Noldorin:
         self.root.geometry("300x380")
         self.root.title("Bienvenidos")
         #pantalla1.iconbitmap("")
+
+        self.db = Nucleox()
 
         self.login()
 
@@ -47,21 +50,26 @@ class Noldorin:
         self.root.mainloop()
 
     def principal(self):
+
+        self.navbar = Navbar(self.root)
+
         self.notebook = Notebook(self.root)
         self.pet_label = Label(self.notebook, text="Animales")
         self.info_label = Label(self.notebook, text="Info")
 
-        self.notebook.add(self.pet_label, text="Animales", padding=20)
-        self.notebook.add(self.info_label, text="Info", padding=20)
+        self.notebook.add(self.pet_label, text="Animales")
+        self.notebook.add(self.info_label, text="Info")
 
         self.notebook.pack(fill="both", expand=True)
         self.root.mainloop()
 
     def validar_datos(self):
-        if(user_name_entry.get() == "Danel"):
+        if(self.db.get_credentials(user_name_entry.get(),user_password_entry.get())):
             messagebox.showinfo(title="Inicio de Sesión perfecto",message="Usuario correcto")
             self.login_frame.pack_forget()
             self.principal()
+        else:
+            messagebox.showerror(title="Error al loguearse", message="Las credenciales no son correctas")
 
 
 
